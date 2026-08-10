@@ -396,22 +396,19 @@ export default function ReportsPage() {
           ) : invDashboard ? (
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <StatCard title="Total Medicines" value={invDashboard.totalMedicines} icon={<AssessmentIcon />} color="#0d7c66" />
+                <StatCard title="Total Medicines" value={invDashboard.totalMedicineCount} icon={<AssessmentIcon />} color="#0d7c66" />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <StatCard title="Active Batches" value={invDashboard.activeBatches} icon={<InventoryIcon />} color="#3a86a8" />
+                <StatCard title="Active Batches" value={invDashboard.activeBatchCount} icon={<InventoryIcon />} color="#3a86a8" />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <StatCard title="Total Stock Units" value={invDashboard.totalStockOnHand} icon={<QtyIcon />} color="#2e7d32" />
+                <StatCard title="Total Stock Units" value={invDashboard.totalLiveStock} icon={<QtyIcon />} color="#2e7d32" />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                 <StatCard title="Low Stock Items" value={invDashboard.lowStockCount} icon={<ErrorIcon />} color="#ed6c02" />
               </Grid>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <StatCard title="Near Expiry Batches" value={invDashboard.nearExpiryBatches} icon={<ErrorIcon />} color="#d32f2f" />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                <StatCard title="Recalled Batches" value={invDashboard.recalledBatches} icon={<ErrorIcon />} color="#9c27b0" />
+                <StatCard title="Recalled Batches" value={invDashboard.recalledBatchCount} icon={<ErrorIcon />} color="#9c27b0" />
               </Grid>
             </Grid>
           ) : null}

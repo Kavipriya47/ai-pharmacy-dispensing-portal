@@ -4,7 +4,6 @@ import {
   Inventory2,
   LocalShipping,
   Warning,
-  EventBusy,
   ReportProblem,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
@@ -76,7 +75,7 @@ export default function DashboardPage() {
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <StatCard
             title="Total Medicines"
-            value={data.totalMedicines}
+            value={data.totalMedicineCount}
             icon={<MedicalServices />}
             color="#0d7c66"
           />
@@ -84,7 +83,7 @@ export default function DashboardPage() {
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <StatCard
             title="Active Batches"
-            value={data.activeBatches}
+            value={data.activeBatchCount}
             icon={<Inventory2 />}
             color="#3a86a8"
           />
@@ -92,7 +91,7 @@ export default function DashboardPage() {
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <StatCard
             title="Total Stock"
-            value={data.totalStockOnHand}
+            value={data.totalLiveStock}
             icon={<LocalShipping />}
             color="#2e7d32"
           />
@@ -107,16 +106,8 @@ export default function DashboardPage() {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <StatCard
-            title="Near Expiry"
-            value={data.nearExpiryBatches}
-            icon={<EventBusy />}
-            color="#d32f2f"
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <StatCard
             title="Recalled Batches"
-            value={data.recalledBatches}
+            value={data.recalledBatchCount}
             icon={<ReportProblem />}
             color="#9c27b0"
           />

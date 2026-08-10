@@ -66,13 +66,11 @@ export interface NotificationDto {
 
 // Inventory Dashboard (used by Dashboard page skeleton)
 export interface InventoryDashboardDto {
-  totalMedicines: number;
-  activeBatches: number;
-  totalStockOnHand: number;
+  totalMedicineCount: number;
   lowStockCount: number;
-  nearExpiryBatches: number;
-  expiredBatches: number;
-  recalledBatches: number;
+  totalLiveStock: number;
+  activeBatchCount: number;
+  recalledBatchCount: number;
 }
 
 // Backend roles - exact values from DB
