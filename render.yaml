@@ -1,0 +1,77 @@
+services:
+  # MySQL Private Service
+  - type: pserv
+    name: pharmacy-db
+    env: docker
+    region: ohio
+    plan: starter
+    image: mysql:8
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: pharmacy_db
+      - key: MYSQL_USER
+        value: pharmacy_user
+      - key: MYSQL_PASSWORD
+        generateValue: true
+
+  # FastAPI ML Service
+  - type: pserv
+    name: pharmacy-ai
+    env: docker
+    region: ohio
+    plan: free
+    dockerContext: ./ai-service
+    dockerfilePath: ./ai-service/Dockerfile
+    envVars:
+      - key: PORT
+        value: 8000
+
+  # Spring Boot Backend
+  - type: web
+    name: pharmacy-backend
+    env: docker
+    region: ohio
+    plan: free
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        # Using Render's internal DNS routing by service name
+        value: "jdbc:mysql://pharmacy-db:3306/pharmacy_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+      - key: SPRING_DATASOURCE_USERNAME
+        value: pharmacy_user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromService:
+          type: pserv
+          name: pharmacy-db
+          env: MYSQL_PASSWORD
+      - key: JWT_SECRET
+        generateValue: true
+      - key: AI_SERVICE_URL
+        # Using Render's internal DNS routing by service name
+        value: "http://pharmacy-ai:8000"
+      - key: CORS_ALLOWED_ORIGINS
+        fromService:
+          type: web
+          name: pharmacy-frontend
+          property: url
+
+  # React Frontend
+  - type: web
+    name: pharmacy-frontend
+    env: static
+    region: ohio
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: pharmacy-backend
+          property: url
