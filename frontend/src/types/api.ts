@@ -235,3 +235,46 @@ export interface DispensationResponse {
   dispensedAt: string; // LocalDateTime serialized as ISO string by Jackson
 }
 
+// -----------------------------------------------------------------------------
+// SPRINT 3D: Reporting & Audit Trail
+// Source: DispensingStatsDto.java, RecallHistoryDto.java, AuditReportRow.java, AuditEventDto.java
+// -----------------------------------------------------------------------------
+
+export interface DispensingStatsDto {
+  completedCount: number;
+  cancelledCount: number;
+  failedCount: number;
+  totalQuantityDispensed: number;
+  semanticsNote?: string;
+}
+
+export interface RecallHistoryDto {
+  batchNumber: string;
+  medicineName: string;
+  recallDate: string;
+  recalledBy: string;
+  reason: string;
+  affectedDispensationCount: number;
+}
+
+export interface AuditReportRow {
+  id: number;
+  eventType: string;
+  performedBy: string;
+  description: string;
+  metadata: string | null;
+  ipAddress: string | null;
+  createdAt: string;
+}
+
+export interface AuditEventDto {
+  id: number;
+  eventType: string;
+  performedBy: string;
+  description: string;
+  metadata: string | null;
+  ipAddress: string | null;
+  createdAt: string;
+}
+
+
