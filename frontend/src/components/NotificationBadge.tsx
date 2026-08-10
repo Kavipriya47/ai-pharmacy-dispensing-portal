@@ -3,7 +3,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUnreadCount, getNotifications, markAsRead } from '../api/notificationApi';
 import { useAuth } from '../auth/useAuth';
-import { ROLES, NotificationDto } from '../types/api';
+import { ROLES } from '../types/api';
+import type { NotificationDto } from '../types/api';
 import React, { useState } from 'react';
 
 export default function NotificationBadge() {
@@ -65,15 +66,15 @@ export default function NotificationBadge() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        PaperProps={{
-          style: {
+        sx={{
+          '& .MuiPaper-root': {
             maxHeight: 400,
             width: '350px',
-          },
+          }
         }}
       >
         <Box sx={{ px: 2, py: 1, borderBottom: '1px solid #e0e0e0' }}>
-          <Typography variant="subtitle1" fontWeight="bold">Notifications</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Notifications</Typography>
         </Box>
         
         {isLoading ? (
@@ -97,7 +98,7 @@ export default function NotificationBadge() {
                 py: 1.5
               }}
             >
-              <Typography variant="body2" fontWeight={notif.read ? 'normal' : 'bold'}>
+              <Typography variant="body2" sx={{ fontWeight: notif.read ? 'normal' : 'bold' }}>
                 {notif.title}
               </Typography>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>

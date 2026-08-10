@@ -1,5 +1,5 @@
 import apiClient from './axiosClient';
-import { NotificationDto } from '../types/api';
+import type { NotificationDto } from '../types/api';
 
 export async function getUnreadCount(): Promise<number> {
   const response = await apiClient.get<number>('/api/v1/notifications/unread-count');
