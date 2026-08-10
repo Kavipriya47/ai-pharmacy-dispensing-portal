@@ -71,6 +71,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(pd);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ProblemDetail> handleIllegalArgument(IllegalArgumentException ex) {
+        String msg = ex.getMessage() != null ? ex.getMessage().toLowerCase() : "";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        
+        if (msg.contains("insufficient stock") || msg.contains("recalled") || 
+            msg.contains("quarantined") || msg.contains("expired") || 
+            msg.contains("active") || msg.contains("already recalled")) {
+            status = HttpStatus.CONFLICT;
+        } else if (msg.contains("unauthorized")) {
+            status = HttpStatus.FORBIDDEN;
+        }
+        
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(status, ex.getMessage());
+        pd.setTitle(status == HttpStatus.CONFLICT ? "Business Rule Conflict" : 
+                   (status == HttpStatus.FORBIDDEN ? "Forbidden" : "Bad Request"));
+        pd.setType(URI.create("https://pharmacy.com/errors/" + status.value()));
+        pd.setProperty("timestamp", Instant.now());
+        return ResponseEntity.status(status).body(pd);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleGeneralException(Exception ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());

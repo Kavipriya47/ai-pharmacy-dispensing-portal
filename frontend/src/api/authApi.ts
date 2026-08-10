@@ -2,7 +2,7 @@ import apiClient from './axiosClient';
 import type { LoginRequest, AuthResponse, UserDto, RefreshTokenRequest } from '../types/api';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function login(data: LoginRequest): Promise<AuthResponse> {
   const response = await apiClient.post<AuthResponse>('/api/v1/auth/login', data);

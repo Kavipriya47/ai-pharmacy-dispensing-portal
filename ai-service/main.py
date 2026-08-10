@@ -72,12 +72,13 @@ def predict_demand(req: DemandPredictRequest):
     future_X = np.arange(last_day + 1, last_day + 31).reshape(-1, 1)
     future_pred = model.predict(future_X)
     
-    # Clip negative predictions to zero and bound maximum predictions
+    daily_avg = float(np.mean(y))
     current_max_daily = float(np.max(y))
+    
+    # Clip negative predictions to zero and bound maximum predictions
     future_pred_clipped = np.clip(future_pred, a_min=0, a_max=max(daily_avg * 3, current_max_daily))
     forecast_30_days = int(round(np.sum(future_pred_clipped)))
     
-    daily_avg = float(np.mean(y))
     slope = float(model.coef_[0])
     
     if slope > 0.05:

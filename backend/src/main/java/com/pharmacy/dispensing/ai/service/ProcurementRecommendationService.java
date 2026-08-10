@@ -53,6 +53,9 @@ public class ProcurementRecommendationService {
             int reorderLevel = med.getReorderLevel() != null ? med.getReorderLevel() : 20;
 
             int recommendedOrder = Math.max(0, (projected30Demand + safetyBuffer) - usableStock);
+            if (usableStock <= reorderLevel) {
+                recommendedOrder = Math.max(recommendedOrder, reorderLevel - usableStock);
+            }
 
             String urgency;
             if (usableStock <= reorderLevel) {

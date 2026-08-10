@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class MlForecastClient {
 
-    @Value("${ai.service.url:http://localhost:8000}")
+    @Value("${ai.service.url}")
     private String aiServiceUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();

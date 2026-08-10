@@ -56,8 +56,8 @@ INSERT INTO roles (name, description) VALUES ('ROLE_PHARMACIST', 'Dispensing and
 INSERT INTO roles (name, description) VALUES ('ROLE_AUDITOR', 'Compliance and Audit Logs Viewer');
 INSERT INTO roles (name, description) VALUES ('ROLE_ADMIN', 'System Administration');
 
--- Seed Default Admin & Pharmacist User (password: Password123!)
--- BCrypt hash for 'Password123!' is '$2a$10$e8wF0i8B6J1G51N7uN9e/O0n5Vn/7X/w8dZ1R8kY.X1e1Z1Z1Z1Z1' (generated at runtime or seeded)
+-- Seed Default Admin & Pharmacist User (passwords must be updated via admin console on first boot)
+-- BCrypt hash generated for default placeholder
 INSERT INTO users (username, email, password_hash, full_name, active) 
 VALUES ('pharmacist', 'pharmacist@pharmacy.com', '$2a$10$76d2vN1Jg8.Z1fO3R.Yy.O0S5.5J0K8N8m6F7r8s9t0u1v2w3x4y5', 'Dr. Sarah Jenkins, PharmD', TRUE);
 

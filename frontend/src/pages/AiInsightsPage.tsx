@@ -13,22 +13,17 @@ import {
   TableRow,
   Paper,
   Alert,
-  Tooltip,
-  Divider,
 } from '@mui/material';
 import {
-  AutoAwesome,
   TrendingUp,
   TrendingDown,
   TrendingFlat,
-  Warning,
-  CheckCircle,
-  LocalShipping,
   Psychology,
   InfoOutlined,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
-import { getAiInsightsSummary, AiInsightsSummaryDto } from '../api/aiApi';
+import { getAiInsightsSummary } from '../api/aiApi';
+import type { AiInsightsSummaryDto } from '../api/aiApi';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert from '../components/ErrorAlert';
 
@@ -49,7 +44,7 @@ export default function AiInsightsPage() {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
         <Psychology sx={{ fontSize: 36, color: 'primary.main' }} />
         <Box>
-          <Typography variant="h4" fontWeight={700}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
             AI Insights
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -68,10 +63,10 @@ export default function AiInsightsPage() {
         <Grid size={{ xs: 12, sm: 4 }}>
           <Card sx={{ bgcolor: 'background.paper', borderLeft: '5px solid #1976d2' }}>
             <CardContent>
-              <Typography variant="body2" color="text.secondary" fontWeight={600}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
                 AI Engine
               </Typography>
-              <Typography variant="h4" fontWeight={700} color="primary.main" sx={{ my: 1 }}>
+              <Typography variant="h4" color="primary.main" sx={{ fontWeight: 700, my: 1 }}>
                 {data.aiEngineStatus}
               </Typography>
               <Typography variant="caption" color="text.secondary">
@@ -84,10 +79,10 @@ export default function AiInsightsPage() {
         <Grid size={{ xs: 12, sm: 4 }}>
           <Card sx={{ bgcolor: 'background.paper', borderLeft: '5px solid #d32f2f' }}>
             <CardContent>
-              <Typography variant="body2" color="text.secondary" fontWeight={600}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
                 Units at Risk
               </Typography>
-              <Typography variant="h4" fontWeight={700} color="error.main" sx={{ my: 1 }}>
+              <Typography variant="h4" color="error.main" sx={{ fontWeight: 700, my: 1 }}>
                 {data.totalUnitsAtRisk}
               </Typography>
               <Typography variant="caption" color="text.secondary">
@@ -100,10 +95,10 @@ export default function AiInsightsPage() {
         <Grid size={{ xs: 12, sm: 4 }}>
           <Card sx={{ bgcolor: 'background.paper', borderLeft: '5px solid #ed6c02' }}>
             <CardContent>
-              <Typography variant="body2" color="text.secondary" fontWeight={600}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
                 Recommended Orders
               </Typography>
-              <Typography variant="h4" fontWeight={700} color="warning.main" sx={{ my: 1 }}>
+              <Typography variant="h4" color="warning.main" sx={{ fontWeight: 700, my: 1 }}>
                 {data.totalRecommendedOrders}
               </Typography>
               <Typography variant="caption" color="text.secondary">
@@ -117,7 +112,7 @@ export default function AiInsightsPage() {
       {/* MODEL TRANSPARENCY */}
       <Card sx={{ mb: 4, bgcolor: '#f4f6f8' }}>
         <CardContent sx={{ p: 3 }}>
-          <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
             🔬 MODEL TRANSPARENCY
           </Typography>
           <Grid container spacing={2}>
@@ -140,7 +135,7 @@ export default function AiInsightsPage() {
       <Card sx={{ mb: 4 }}>
         <CardContent sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-            <Typography variant="h6" fontWeight={700}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>
               🔮 DEMAND FORECAST
             </Typography>
           </Box>
@@ -148,7 +143,7 @@ export default function AiInsightsPage() {
             <Table size="small">
               <TableHead sx={{ bgcolor: '#f8fafc' }}>
                 <TableRow>
-                  <TableCell fontWeight={700}>Medicine</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>Medicine</TableCell>
                   <TableCell align="right">Avg/day</TableCell>
                   <TableCell align="right">30-Day Forecast</TableCell>
                   <TableCell align="center">Trend</TableCell>
@@ -157,7 +152,7 @@ export default function AiInsightsPage() {
               <TableBody>
                 {data.demandForecasts.map((f) => (
                   <TableRow key={f.medicineId} hover>
-                    <TableCell fontWeight={600}>{f.medicineName}</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>{f.medicineName}</TableCell>
                     <TableCell align="right">{f.dailyDemandAverage} units</TableCell>
                     <TableCell align="right" sx={{ fontWeight: 700, color: 'primary.main' }}>
                       {f.forecasted30DayDemand} units
@@ -197,7 +192,7 @@ export default function AiInsightsPage() {
       <Card sx={{ mb: 4 }}>
         <CardContent sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-            <Typography variant="h6" fontWeight={700}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>
               ⚠️ EXPIRY-WASTE RISK
             </Typography>
           </Box>
@@ -214,7 +209,7 @@ export default function AiInsightsPage() {
               <TableBody>
                 {data.expiryWasteRisks.map((r) => (
                   <TableRow key={r.batchId} hover>
-                    <TableCell fontWeight={600}>{r.batchNumber}</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>{r.batchNumber}</TableCell>
                     <TableCell>{r.medicineName}</TableCell>
                     <TableCell align="right" sx={{ fontWeight: 700, color: r.unitsAtRisk > 0 ? 'error.main' : 'text.primary' }}>
                       {r.unitsAtRisk}
@@ -238,7 +233,7 @@ export default function AiInsightsPage() {
       <Card>
         <CardContent sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-            <Typography variant="h6" fontWeight={700}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>
               📦 SMART PROCUREMENT
             </Typography>
           </Box>
@@ -256,7 +251,7 @@ export default function AiInsightsPage() {
               <TableBody>
                 {data.procurementRecommendations.map((p) => (
                   <TableRow key={p.medicineId} hover>
-                    <TableCell fontWeight={600}>{p.medicineName}</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>{p.medicineName}</TableCell>
                     <TableCell align="right">{p.currentUsableStock}</TableCell>
                     <TableCell align="right">{p.projected30DayDemand}</TableCell>
                     <TableCell align="right" sx={{ fontWeight: 700, color: p.recommendedOrderQuantity > 0 ? 'warning.dark' : 'success.main' }}>

@@ -1,6 +1,6 @@
 -- V7: Seed/fix default authentication accounts
 -- LOCAL/DEMO credentials only.
--- Password: Password123!
+-- Password must be updated immediately upon first login
 
 -- 1. Fix existing pharmacist password
 UPDATE users
