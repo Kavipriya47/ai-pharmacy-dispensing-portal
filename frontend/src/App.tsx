@@ -15,6 +15,7 @@ import InventoryPage from './pages/InventoryPage';
 import DispensingPage from './pages/DispensingPage';
 import ReportsPage from './pages/ReportsPage';
 import AuditPage from './pages/AuditPage';
+import AiInsightsPage from './pages/AiInsightsPage';
 import { ROLES } from './types/api';
 
 const queryClient = new QueryClient({
@@ -68,6 +69,7 @@ export default function App() {
                     </RoleRoute>
                   }
                 />
+                <Route path="ai-insights" element={<AiInsightsPage />} />
                 <Route path="reports" element={<ReportsPage />} />
                 <Route
                   path="audit"

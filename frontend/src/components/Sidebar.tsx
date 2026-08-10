@@ -18,6 +18,7 @@ import {
   Assessment,
   Security,
   LocalShipping,
+  Psychology,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
@@ -38,6 +39,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Suppliers', path: '/suppliers', icon: <LocalShipping />, roles: [ROLES.ADMIN, ROLES.PHARMACIST] },
   { label: 'Inventory', path: '/inventory', icon: <Inventory2 />, roles: [] },
   { label: 'Dispensing', path: '/dispensing', icon: <LocalPharmacy />, roles: [ROLES.ADMIN, ROLES.PHARMACIST] },
+  { label: 'AI Insights', path: '/ai-insights', icon: <Psychology />, roles: [] },
   { label: 'Reports', path: '/reports', icon: <Assessment />, roles: [] },
   { label: 'Audit Trail', path: '/audit', icon: <Security />, roles: [ROLES.ADMIN, ROLES.AUDITOR] },
 ];

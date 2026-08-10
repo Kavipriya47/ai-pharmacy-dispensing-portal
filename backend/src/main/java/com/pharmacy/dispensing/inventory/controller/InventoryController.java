@@ -83,11 +83,12 @@ public class InventoryController {
 
     @PostMapping("/batches/{batchNumber}/recall")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MedicineBatch> initiateRecall(
+    public ResponseEntity<BatchResponse> initiateRecall(
             @PathVariable String batchNumber,
             @RequestBody java.util.Map<String, String> payload) {
         String reason = payload.get("reason");
-        return ResponseEntity.ok(recallService.initiateRecall(batchNumber, reason));
+        MedicineBatch recalled = recallService.initiateRecall(batchNumber, reason);
+        return ResponseEntity.ok(batchService.mapToResponse(recalled));
     }
 
     @GetMapping("/batches/{batchNumber}/affected-patients")

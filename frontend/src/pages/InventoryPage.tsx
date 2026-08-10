@@ -108,6 +108,10 @@ export default function InventoryPage() {
       queryClient.invalidateQueries({ queryKey: ['stockSummary'] });
       setOpenBatchModal(false);
     },
+    onError: (error: any) => {
+      console.error('Receive batch failed:', error);
+      alert(error.response?.data?.detail || error.message || 'Failed to receive batch');
+    }
   });
 
   const recallBatchMutation = useMutation({
@@ -117,6 +121,10 @@ export default function InventoryPage() {
       queryClient.invalidateQueries({ queryKey: ['stockSummary'] });
       setOpenRecallModal(false);
     },
+    onError: (error: any) => {
+      console.error('Recall batch failed:', error);
+      alert(error.response?.data?.detail || error.message || 'Failed to recall batch');
+    }
   });
 
   const handleOpenReorderModal = (stock: StockSummaryResponse) => {
