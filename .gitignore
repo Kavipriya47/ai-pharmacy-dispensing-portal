@@ -39,3 +39,6 @@ frontend/dist/
 # Misc
 *.tmp
 *.swp
+
+# Local tooling (not part of the project)
+.tools/
