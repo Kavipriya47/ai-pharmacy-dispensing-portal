@@ -1,0 +1,41 @@
+# Maven / Build
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE
+.idea/
+*.iml
+.eclipse/
+.classpath
+.project
+.settings/
+*.iws
+
+# Logs
+*.log
+logs/
+
+# Spring Boot properties with secrets (keep template only)
+backend/src/main/resources/application-secrets.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (for future frontend)
+node_modules/
+dist/
+.env
+.env.local
+.env.production
+
+# React build
+frontend/build/
+frontend/dist/
+
+# Misc
+*.tmp
+*.swp
