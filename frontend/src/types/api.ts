@@ -189,3 +189,49 @@ export interface StockSummaryResponse {
   lowStock: boolean;
   activeBatchCount: number;
 }
+
+// -----------------------------------------------------------------------------
+// SPRINT 3C: Dispensing
+// Source: DispensationStatus.java, DispenseRequest.java, DispensationResponse.java
+// -----------------------------------------------------------------------------
+
+/** Exactly 2 values — DispensationStatus.java */
+export type DispensationStatus = 'COMPLETED' | 'CANCELLED';
+
+/** POST /api/v1/dispensing — DispenseRequest.java */
+export interface DispenseRequest {
+  /** @NotNull */
+  medicineId: number;
+  /** Optional. If provided, FEFO is overridden. overrideReason becomes required. */
+  batchId?: number | null;
+  /** @NotBlank, max 100 */
+  patientIdentifier: string;
+  /** max 200. Required when medicine.requiresPrescription === true */
+  prescriptionReference?: string;
+  /** @NotNull, @Min(1) */
+  quantity: number;
+  /** Required when batchId is provided */
+  overrideReason?: string;
+  /** Optional free-text */
+  notes?: string;
+}
+
+/** Response for GET /api/v1/dispensing and POST /api/v1/dispensing — DispensationResponse.java
+ *  Note: `notes` is stored in DispensationRecord but is NOT included in this DTO.
+ */
+export interface DispensationResponse {
+  id: number;
+  medicineId: number;
+  medicineName: string;
+  batchId: number;
+  batchNumber: string;
+  patientIdentifier: string;
+  prescriptionReference: string | null;
+  quantityDispensed: number;
+  dispensedBy: string;
+  status: DispensationStatus;
+  fefoOverride: boolean;
+  overrideReason: string | null;
+  dispensedAt: string; // LocalDateTime serialized as ISO string by Jackson
+}
+
