@@ -127,7 +127,9 @@ export default function DispensingPage() {
   const queryClient = useQueryClient();
   const canDispense = user?.roles?.some(r => r === ROLES.ADMIN || r === ROLES.PHARMACIST);
 
-  const [activeTab, setActiveTab] = useState(canDispense ? 0 : 1);
+  const [activeTab, setActiveTab] = useState(0);
+  const historyTabIndex = canDispense ? 1 : 0;
+  const patientTabIndex = canDispense ? 2 : 1;
 
   // ---------- Dispense form state -------------------------------------------
   const [selectedMedicine, setSelectedMedicine] = useState<MedicineResponse | null>(null);
@@ -194,7 +196,7 @@ export default function DispensingPage() {
       status: histStatus !== 'ALL' ? histStatus : undefined
     }),
     staleTime: 30_000,
-    enabled: activeTab === 1,
+    enabled: activeTab === historyTabIndex,
   });
 
   // Patient lookup query (only triggered when patientQuery is set)
@@ -202,7 +204,7 @@ export default function DispensingPage() {
     queryKey: ['dispensations', 'patient', patientQuery, patLookupPage, patLookupSize],
     queryFn: () => getDispensationsByPatient(patientQuery, patLookupPage, patLookupSize),
     staleTime: 30_000,
-    enabled: activeTab === 2 && patientQuery.trim().length > 0,
+    enabled: activeTab === patientTabIndex && patientQuery.trim().length > 0,
   });
 
   // ---------- Dispense mutation ---------------------------------------------
@@ -532,7 +534,7 @@ export default function DispensingPage() {
       )}
 
       {/* ===================== TAB 1: HISTORY =============================== */}
-      <TabPanel value={activeTab} index={canDispense ? 1 : 0}>
+      <TabPanel value={activeTab} index={historyTabIndex}>
         <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
           Dispensation History
         </Typography>
@@ -593,7 +595,7 @@ export default function DispensingPage() {
       </TabPanel>
 
       {/* ===================== TAB 2: PATIENT LOOKUP ======================== */}
-      <TabPanel value={activeTab} index={canDispense ? 2 : 1}>
+      <TabPanel value={activeTab} index={patientTabIndex}>
         <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
           Patient Dispensation Lookup
         </Typography>

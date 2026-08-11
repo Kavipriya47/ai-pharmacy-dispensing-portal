@@ -28,9 +28,7 @@ export async function receiveBatch(data: BatchRequest): Promise<BatchResponse> {
 }
 
 export async function recallBatch(batchNumber: string, reason: string): Promise<void> {
-  await apiClient.post(`/api/v1/inventory/batches/${batchNumber}/recall`, reason, {
-    headers: { 'Content-Type': 'text/plain' }
-  });
+  await apiClient.post(`/api/v1/inventory/batches/${batchNumber}/recall`, { reason });
 }
 
 export async function getAffectedPatients(batchNumber: string): Promise<string[]> {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDebounce } from '../hooks/useDebounce';
 import {
   Typography, Box, Tabs, Tab, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, TablePagination, Chip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField,
@@ -64,13 +65,14 @@ export default function InventoryPage() {
   // Batch Filter state
   const [batchSearch, setBatchSearch] = useState('');
   const [batchStatus, setBatchStatus] = useState('ALL');
+  const debouncedBatchSearch = useDebounce(batchSearch, 300);
 
   const { data: batchesPage, isLoading: isLoadingBatches } = useQuery({
-    queryKey: ['batches', batchPage, batchSize, batchSearch, batchStatus],
+    queryKey: ['batches', batchPage, batchSize, debouncedBatchSearch, batchStatus],
     queryFn: () => getBatches({
       page: batchPage,
       size: batchSize,
-      search: batchSearch || undefined,
+      search: debouncedBatchSearch || undefined,
       status: batchStatus !== 'ALL' ? batchStatus : undefined
     }),
   });

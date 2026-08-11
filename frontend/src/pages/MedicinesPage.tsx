@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDebounce } from '../hooks/useDebounce';
 import {
   Typography,
   Box,
@@ -58,10 +59,11 @@ export default function MedicinesPage() {
   const [size, setSize] = useState(10);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
 
   const { data: medicinesPage, isLoading } = useQuery({
-    queryKey: ['medicines', page, size, search, categoryFilter],
-    queryFn: () => getMedicines({ page, size, search: search || undefined, category: categoryFilter || undefined }),
+    queryKey: ['medicines', page, size, debouncedSearch, categoryFilter],
+    queryFn: () => getMedicines({ page, size, search: debouncedSearch || undefined, category: categoryFilter || undefined }),
   });
 
   const { data: suppliers } = useQuery({
