@@ -15,9 +15,16 @@ export function dispense(data: DispenseRequest): Promise<DispensationResponse> {
  * Auth: ADMIN, PHARMACIST, AUDITOR
  * Sorted by dispensedAt descending (hardcoded in DispensingController).
  */
-export function getDispensations(page = 0, size = 20): Promise<Page<DispensationResponse>> {
+export function getDispensations(params?: {
+  page?: number;
+  size?: number;
+  startDate?: string;
+  endDate?: string;
+  medicineId?: number;
+  status?: string;
+}): Promise<Page<DispensationResponse>> {
   return apiClient
-    .get<Page<DispensationResponse>>('/api/v1/dispensing', { params: { page, size } })
+    .get<Page<DispensationResponse>>('/api/v1/dispensing', { params })
     .then(r => r.data);
 }
 

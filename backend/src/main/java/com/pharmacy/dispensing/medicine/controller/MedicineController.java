@@ -37,38 +37,18 @@ public class MedicineController {
 
     @GetMapping
     public ResponseEntity<Page<MedicineResponse>> findAll(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) MedicineCategory category,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "name") String sortBy) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        return ResponseEntity.ok(medicineService.findAll(pageable));
+        return ResponseEntity.ok(medicineService.findAll(search, category, pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<MedicineResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(medicineService.findById(id));
-    }
-
-    /**
-     * Search medicines by name or generic name (case-insensitive, partial match).
-     * Example: GET /api/v1/medicines/search?q=amox
-     */
-    @GetMapping("/search")
-    public ResponseEntity<Page<MedicineResponse>> search(
-            @RequestParam String q,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        PageRequest pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        return ResponseEntity.ok(medicineService.search(q, pageable));
-    }
-
-    @GetMapping("/category/{category}")
-    public ResponseEntity<Page<MedicineResponse>> findByCategory(
-            @PathVariable MedicineCategory category,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        PageRequest pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        return ResponseEntity.ok(medicineService.findByCategory(category, pageable));
     }
 
     @PutMapping("/{id}")

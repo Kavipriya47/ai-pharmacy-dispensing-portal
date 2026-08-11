@@ -48,8 +48,8 @@ public class MedicineService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MedicineResponse> findAll(Pageable pageable) {
-        return medicineRepository.findByActiveTrue(pageable).map(this::mapToResponse);
+    public Page<MedicineResponse> findAll(String search, MedicineCategory category, Pageable pageable) {
+        return medicineRepository.searchAndFilterActive(search, category, pageable).map(this::mapToResponse);
     }
 
     @Transactional(readOnly = true)
@@ -57,16 +57,6 @@ public class MedicineService {
         Medicine medicine = medicineRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Medicine not found with id: " + id));
         return mapToResponse(medicine);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<MedicineResponse> search(String query, Pageable pageable) {
-        return medicineRepository.searchByNameOrGenericName(query, pageable).map(this::mapToResponse);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<MedicineResponse> findByCategory(MedicineCategory category, Pageable pageable) {
-        return medicineRepository.findByCategoryAndActiveTrue(category, pageable).map(this::mapToResponse);
     }
 
     @Transactional

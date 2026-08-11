@@ -39,10 +39,14 @@ public class DispensingController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PHARMACIST', 'AUDITOR')")
     public ResponseEntity<Page<DispensationResponse>> findAll(
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime startDate,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime endDate,
+            @RequestParam(required = false) Long medicineId,
+            @RequestParam(required = false) com.pharmacy.dispensing.dispensing.entity.DispensationStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by("dispensedAt").descending());
-        return ResponseEntity.ok(dispensingService.findAll(pageable));
+        return ResponseEntity.ok(dispensingService.findAll(startDate, endDate, medicineId, status, pageable));
     }
 
     /**

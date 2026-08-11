@@ -116,8 +116,8 @@ public class MedicineBatchService {
     // -------------------------------------------------------
 
     @Transactional(readOnly = true)
-    public Page<BatchResponse> findAll(Pageable pageable) {
-        return batchRepository.findAll(pageable).map(this::mapToResponse);
+    public Page<BatchResponse> findAll(String search, BatchStatus status, Long medicineId, Pageable pageable) {
+        return batchRepository.searchAndFilter(search, status, medicineId, pageable).map(this::mapToResponse);
     }
 
     @Transactional(readOnly = true)

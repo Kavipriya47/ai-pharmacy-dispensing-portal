@@ -162,8 +162,12 @@ public class DispensingService {
     }
 
     @Transactional(readOnly = true)
-    public Page<DispensationResponse> findAll(Pageable pageable) {
-        return dispensationRepository.findAll(pageable).map(this::mapToResponse);
+    public Page<DispensationResponse> findAll(java.time.LocalDateTime startDate,
+                                              java.time.LocalDateTime endDate,
+                                              Long medicineId,
+                                              DispensationStatus status,
+                                              Pageable pageable) {
+        return dispensationRepository.searchAndFilter(startDate, endDate, medicineId, status, pageable).map(this::mapToResponse);
     }
 
     @Transactional(readOnly = true)

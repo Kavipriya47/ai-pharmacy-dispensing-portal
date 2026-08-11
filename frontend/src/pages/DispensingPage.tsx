@@ -170,22 +170,29 @@ export default function DispensingPage() {
     data: batchesPage,
     isFetching: batchesFetching,
   } = useQuery({
-    queryKey: ['batches', batchPage, BATCH_PAGE_SIZE],
-    queryFn: () => getBatches({ page: batchPage, size: BATCH_PAGE_SIZE }),
+    queryKey: ['batches', batchPage, BATCH_PAGE_SIZE, selectedMedicine?.id],
+    queryFn: () => getBatches({ page: batchPage, size: BATCH_PAGE_SIZE, medicineId: selectedMedicine?.id, status: 'ACTIVE' }),
     staleTime: 30_000,
     enabled: !useFefo && selectedMedicine != null, // only fetch when manual mode is active
   });
 
-  // Batches filtered client-side to selected medicine + ACTIVE status
-  const eligibleBatches: BatchResponse[] = (batchesPage?.content ?? []).filter(
-    b => b.medicineId === selectedMedicine?.id && b.status === 'ACTIVE',
-  );
+  const eligibleBatches: BatchResponse[] = batchesPage?.content ?? [];
   const hasMoreBatchPages = batchesPage ? !batchesPage.last : false;
+
+  const [histStartDate, setHistStartDate] = useState('');
+  const [histEndDate, setHistEndDate] = useState('');
+  const [histStatus, setHistStatus] = useState('ALL');
 
   // History query
   const { data: histPage_data, isLoading: histLoading } = useQuery({
-    queryKey: ['dispensations', histPage, histSize],
-    queryFn: () => getDispensations(histPage, histSize),
+    queryKey: ['dispensations', histPage, histSize, histStartDate, histEndDate, histStatus],
+    queryFn: () => getDispensations({
+      page: histPage,
+      size: histSize,
+      startDate: histStartDate ? new Date(histStartDate).toISOString() : undefined,
+      endDate: histEndDate ? new Date(histEndDate).toISOString() : undefined,
+      status: histStatus !== 'ALL' ? histStatus : undefined
+    }),
     staleTime: 30_000,
     enabled: activeTab === 1,
   });
@@ -207,8 +214,8 @@ export default function DispensingPage() {
       setDispenseError(null);
       // Invalidate history and inventory caches
       queryClient.invalidateQueries({ queryKey: ['dispensations'] });
-      queryClient.invalidateQueries({ queryKey: ['inventory'] });
-      queryClient.invalidateQueries({ queryKey: ['stock-summary'] });
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+      queryClient.invalidateQueries({ queryKey: ['stockSummary'] });
       // Reset form
       setSelectedMedicine(null);
       setSelectedBatch(null);
@@ -529,6 +536,51 @@ export default function DispensingPage() {
         <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
           Dispensation History
         </Typography>
+
+        <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+          <TextField
+            label="Start Date"
+            type="date"
+            size="small"
+            slotProps={{ inputLabel: { shrink: true } }}
+            value={histStartDate}
+            onChange={(e) => { setHistStartDate(e.target.value); setHistPage(0); }}
+          />
+          <TextField
+            label="End Date"
+            type="date"
+            size="small"
+            slotProps={{ inputLabel: { shrink: true } }}
+            value={histEndDate}
+            onChange={(e) => { setHistEndDate(e.target.value); setHistPage(0); }}
+          />
+          <TextField
+            select
+            label="Status"
+            size="small"
+            value={histStatus}
+            onChange={(e) => { setHistStatus(e.target.value); setHistPage(0); }}
+            slotProps={{ select: { native: true } }}
+            sx={{ minWidth: 150 }}
+          >
+            <option value="ALL">All</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="FAILED">Failed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </TextField>
+          <Button 
+            variant="outlined" 
+            onClick={() => {
+              setHistStartDate('');
+              setHistEndDate('');
+              setHistStatus('ALL');
+              setHistPage(0);
+            }}
+          >
+            Clear Filters
+          </Button>
+        </Box>
+
         <HistoryTable
           rows={histPage_data?.content ?? []}
           totalElements={histPage_data?.totalElements ?? 0}

@@ -21,6 +21,16 @@ public interface MedicineBatchRepository extends JpaRepository<MedicineBatch, Lo
 
     Page<MedicineBatch> findByStatus(BatchStatus status, Pageable pageable);
 
+    @Query("""
+            SELECT b FROM MedicineBatch b
+            WHERE (:status IS NULL OR b.status = :status)
+              AND (:medicineId IS NULL OR b.inventory.medicine.id = :medicineId)
+              AND (:search IS NULL OR :search = '' 
+                   OR LOWER(b.batchNumber) LIKE LOWER(CONCAT('%', :search, '%')) 
+                   OR LOWER(b.inventory.medicine.name) LIKE LOWER(CONCAT('%', :search, '%')))
+            """)
+    Page<MedicineBatch> searchAndFilter(@Param("search") String search, @Param("status") BatchStatus status, @Param("medicineId") Long medicineId, Pageable pageable);
+
     // --- Reporting queries ---
     long countByStatus(BatchStatus status);
 

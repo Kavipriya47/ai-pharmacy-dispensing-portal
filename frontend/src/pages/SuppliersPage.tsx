@@ -47,6 +47,9 @@ export default function SuppliersPage() {
     address: '',
   });
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+
   const createMutation = useMutation({
     mutationFn: createSupplier,
     onSuccess: () => {
@@ -59,6 +62,7 @@ export default function SuppliersPage() {
     mutationFn: ({ id, data }: { id: number; data: SupplierRequest }) => updateSupplier(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['suppliers'] });
+      queryClient.invalidateQueries({ queryKey: ['medicines'] });
       handleCloseForm();
     },
   });
@@ -67,6 +71,7 @@ export default function SuppliersPage() {
     mutationFn: deactivateSupplier,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['suppliers'] });
+      queryClient.invalidateQueries({ queryKey: ['medicines'] });
     },
   });
 
@@ -111,6 +116,15 @@ export default function SuppliersPage() {
     }
   };
 
+  const filteredSuppliers = suppliers?.filter(supplier => {
+    const matchesSearch = supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          (supplier.contactPerson?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
+    const matchesStatus = statusFilter === 'ALL' || 
+                          (statusFilter === 'ACTIVE' && supplier.active) || 
+                          (statusFilter === 'INACTIVE' && !supplier.active);
+    return matchesSearch && matchesStatus;
+  });
+
   if (isLoading) return <LoadingSpinner />;
 
   return (
@@ -122,6 +136,29 @@ export default function SuppliersPage() {
             Add Supplier
           </Button>
         )}
+      </Box>
+
+      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        <TextField
+          label="Search by name or contact"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <TextField
+          select
+          label="Status"
+          variant="outlined"
+          size="small"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          slotProps={{ select: { native: true } }}
+        >
+          <option value="ALL">All Statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </TextField>
       </Box>
 
       <TableContainer component={Paper}>
@@ -137,7 +174,7 @@ export default function SuppliersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {suppliers?.map((supplier) => (
+            {filteredSuppliers?.map((supplier) => (
               <TableRow key={supplier.id}>
                 <TableCell>{supplier.name}</TableCell>
                 <TableCell>{supplier.contactPerson}</TableCell>
@@ -162,10 +199,10 @@ export default function SuppliersPage() {
                 )}
               </TableRow>
             ))}
-            {(!suppliers || suppliers.length === 0) && (
+            {(!filteredSuppliers || filteredSuppliers.length === 0) && (
               <TableRow>
                 <TableCell colSpan={isAdmin ? 6 : 5} align="center">
-                  No suppliers found.
+                  No suppliers found matching the criteria.
                 </TableCell>
               </TableRow>
             )}

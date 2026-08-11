@@ -96,6 +96,8 @@ export default function MedicinesPage() {
     mutationFn: ({ id, data }: { id: number; data: MedicineRequest }) => updateMedicine(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['medicines'] });
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+      queryClient.invalidateQueries({ queryKey: ['stockSummary'] });
       handleCloseForm();
     },
   });

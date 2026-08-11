@@ -44,4 +44,17 @@ public interface DispensationRepository extends JpaRepository<DispensationRecord
     List<Object[]> countByPharmacistInRange(@Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
 
     Page<DispensationRecord> findByDispensedAtBetween(LocalDateTime from, LocalDateTime to, Pageable pageable);
+
+    @Query("""
+            SELECT d FROM DispensationRecord d
+            WHERE (:startDate IS NULL OR d.dispensedAt >= :startDate)
+              AND (:endDate IS NULL OR d.dispensedAt <= :endDate)
+              AND (:medicineId IS NULL OR d.medicine.id = :medicineId)
+              AND (:status IS NULL OR d.status = :status)
+            """)
+    Page<DispensationRecord> searchAndFilter(@Param("startDate") LocalDateTime startDate,
+                                             @Param("endDate") LocalDateTime endDate,
+                                             @Param("medicineId") Long medicineId,
+                                             @Param("status") DispensationStatus status,
+                                             Pageable pageable);
 }

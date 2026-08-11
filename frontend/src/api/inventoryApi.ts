@@ -14,6 +14,7 @@ export async function getStockSummary(params?: {
 export async function getBatches(params?: {
   page?: number;
   size?: number;
+  search?: string;
   medicineId?: number;
   status?: string;
 }): Promise<Page<BatchResponse>> {

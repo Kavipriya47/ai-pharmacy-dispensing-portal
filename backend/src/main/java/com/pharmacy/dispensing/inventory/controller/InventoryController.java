@@ -64,11 +64,14 @@ public class InventoryController {
     @GetMapping("/batches")
     @PreAuthorize("hasAnyRole('ADMIN', 'PHARMACIST', 'AUDITOR')")
     public ResponseEntity<Page<BatchResponse>> findAll(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) com.pharmacy.dispensing.inventory.entity.BatchStatus status,
+            @RequestParam(required = false) Long medicineId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "expiryDate") String sortBy) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        return ResponseEntity.ok(batchService.findAll(pageable));
+        return ResponseEntity.ok(batchService.findAll(search, status, medicineId, pageable));
     }
 
     /**

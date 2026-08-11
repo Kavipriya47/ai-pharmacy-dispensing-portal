@@ -33,4 +33,12 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
     Page<Medicine> searchByNameOrGenericName(@Param("query") String query, Pageable pageable);
 
     Page<Medicine> findByCategoryAndActiveTrue(MedicineCategory category, Pageable pageable);
+
+    @Query("""
+            SELECT m FROM Medicine m
+            WHERE m.active = true
+              AND (:category IS NULL OR m.category = :category)
+              AND (:search IS NULL OR :search = '' OR LOWER(m.name) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(m.genericName) LIKE LOWER(CONCAT('%', :search, '%')))
+            """)
+    Page<Medicine> searchAndFilterActive(@Param("search") String search, @Param("category") MedicineCategory category, Pageable pageable);
 }

@@ -61,9 +61,18 @@ export default function InventoryPage() {
     queryFn: () => getStockSummary({ page: stockPage, size: stockSize }),
   });
 
+  // Batch Filter state
+  const [batchSearch, setBatchSearch] = useState('');
+  const [batchStatus, setBatchStatus] = useState('ALL');
+
   const { data: batchesPage, isLoading: isLoadingBatches } = useQuery({
-    queryKey: ['batches', batchPage, batchSize],
-    queryFn: () => getBatches({ page: batchPage, size: batchSize }),
+    queryKey: ['batches', batchPage, batchSize, batchSearch, batchStatus],
+    queryFn: () => getBatches({
+      page: batchPage,
+      size: batchSize,
+      search: batchSearch || undefined,
+      status: batchStatus !== 'ALL' ? batchStatus : undefined
+    }),
   });
 
   const { data: medicinesPage } = useQuery({
@@ -119,6 +128,7 @@ export default function InventoryPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['batches'] });
       queryClient.invalidateQueries({ queryKey: ['stockSummary'] });
+      queryClient.invalidateQueries({ queryKey: ['medicines'] });
       setOpenRecallModal(false);
     },
     onError: (error: any) => {
@@ -306,7 +316,33 @@ export default function InventoryPage() {
 
       {/* BATCHES TAB */}
       <TabPanel value={tabValue} index={1}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <TextField
+              label="Search batches or medicines"
+              variant="outlined"
+              size="small"
+              value={batchSearch}
+              onChange={(e) => { setBatchSearch(e.target.value); setBatchPage(0); }}
+            />
+            <TextField
+              select
+              label="Status"
+              variant="outlined"
+              size="small"
+              value={batchStatus}
+              onChange={(e) => { setBatchStatus(e.target.value); setBatchPage(0); }}
+              slotProps={{ select: { native: true } }}
+              sx={{ minWidth: 120 }}
+            >
+              <option value="ALL">All</option>
+              <option value="ACTIVE">Active</option>
+              <option value="EXPIRED">Expired</option>
+              <option value="QUARANTINED">Quarantined</option>
+              <option value="RECALLED">Recalled</option>
+              <option value="DEPLETED">Depleted</option>
+            </TextField>
+          </Box>
           <Button variant="contained" startIcon={<AddCircleOutlineIcon />} onClick={handleOpenBatchModal}>
             Receive Batch
           </Button>
